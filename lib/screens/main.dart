@@ -12,19 +12,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: RegisterPage(),
+      home: Login(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
 
   @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  bool _isVisible = true;
+  final TextEditingController email = TextEditingController();
+  final TextEditingController password = TextEditingController();
+  @override
   Widget build(BuildContext context) {
-    final TextEditingController email = TextEditingController();
-    final TextEditingController password = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Log in to your account",
@@ -39,69 +45,71 @@ class Login extends StatelessWidget {
         color: Colors.blueGrey.shade50,
         padding: const EdgeInsets.all(32),
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('\nPlease sign in to your account here',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              Container(
-                margin: const EdgeInsets.all(32),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
+          child: Form(
+            child: Column(
+              children: <Widget> [
+                TextFormField(
+                  controller: email,
+                  decoration: const InputDecoration(
+                    labelText: "Email",
+                  ),
                 ),
-                child: Column(
-                  children: <Widget>[
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.email),
-                        labelText: "Email",
+                TextFormField(
+                  controller: password,
+                  obscureText: _isVisible,
+                  decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                            _isVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isVisible = !_isVisible;
+                          });
+                        },
                       ),
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.lock),
-                        labelText: "Password",
-                      ),
-                    ),
-                  ],
+                      labelText: 'Password'),
                 ),
-              ),
-              Column(
-                  children: <Widget> [
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: const Text(
-                          'Sign In',
-                          style: TextStyle(fontSize: 20)),
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                Column(
+                    children: <Widget> [
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {},
+                        child: const Text(
+                            'Sign In',
+                            style: TextStyle(fontSize: 20)),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                        ),
                       ),
-                    ),
-                    const Text(
-                        "\nDon't have an account?",
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage()));
-
-                      },
-                      child: const Text(
-                        'Register',
-                        style: TextStyle(fontSize: 20),
+                      const Text(
+                        "\n\nDon't have an account?",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        )
                       ),
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterPage()));
+                        },
+                        child: const Text(
+                          'Register',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                        ),
                       ),
-                    ),
-                  ]
-              ),
-            ],
+                    ]
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
-
 

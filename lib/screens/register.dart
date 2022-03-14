@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 import 'main.dart';
 
@@ -15,9 +16,12 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController lastName = TextEditingController();
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
+  final TextEditingController password2 = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
+    GlobalKey<FormState> formKey = GlobalKey<FormState>();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create your Account here",
@@ -32,44 +36,42 @@ class _RegisterPageState extends State<RegisterPage> {
         color: Colors.blueGrey.shade50,
         padding: const EdgeInsets.all(32),
         child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(children: <Widget>[
+            child: Form(
+              child: Column(
+                children: <Widget> [
                   TextFormField(
-                    decoration: const InputDecoration(labelText: 'First Name'),
+                    controller: firstName,
+                    decoration: const InputDecoration(labelText: 'First Name *'),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "* Required";
+                      } else {
+                        return null;
+                      }
+                    },
                   ),
                   TextFormField(
-                    decoration: const InputDecoration(labelText: 'Last Name'),
+                    controller: lastName,
+                    decoration: const InputDecoration(labelText: 'Last Name *'),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "* Required";
+                      } else {
+                        return null;
+                      }
+                    },
                   ),
                   TextFormField(
+                    controller: email,
                     decoration: const InputDecoration(
-                        labelText: 'Email Address'),
+                        labelText: 'Email Address *'),
+                    validator:MultiValidator([
+                      RequiredValidator(errorText: "* Required"),
+                      EmailValidator(errorText: "Enter valid email id"),
+                    ]),
                   ),
                   TextFormField(
-                    obscureText: _isVisible,
-                    decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _isVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _isVisible = !_isVisible;
-                            });
-                          },
-                        ),
-                        labelText: 'Password'),
-                  ),
-                  TextFormField(
+                    controller: password,
                     obscureText: _isVisible,
                     decoration: InputDecoration(
                         suffixIcon: IconButton(
@@ -84,12 +86,50 @@ class _RegisterPageState extends State<RegisterPage> {
                             });
                           },
                         ),
-                        labelText: 'Confirm Password'),
+                        labelText: 'Password *'),
+                        validator:(value) {
+                          if (value!.isEmpty) {
+                            return "* Required";
+                          } else if (value.length < 6) {
+                            return "Password must be at least 6 characters";
+                          } else if (value.length > 15) {
+                            return "Password must be at least 15 characters";
+                          } else {
+                            return null;
+                          }
+                        }
                   ),
-                ]),
-              ),
-              Column(
-                children: <Widget>[
+                  TextFormField(
+                    controller: password2,
+                    obscureText: _isVisible,
+                    decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                              _isVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isVisible = !_isVisible;
+                            });
+                          },
+                        ),
+                        labelText: 'Confirm Password *'),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "* Required";
+                      } else if (value.length < 6) {
+                        return "Password must be at least 6 characters";
+                      } else if (value.length > 15) {
+                        return "Password must be at least 15 characters";
+                      } else
+                      {
+                        return null;
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                     },
@@ -99,10 +139,13 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.black),
+                      MaterialStateProperty.all<Color>(Colors.black),
                     ),
                   ),
-                  const Text('\nAlready have an account?'),
+                  const Text('\nAlready have an account?',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                  ),),
                   ElevatedButton(
                     child: const Text(
                       'Sign In',
@@ -110,16 +153,15 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.black),
+                      MaterialStateProperty.all<Color>(Colors.black),
                     ),
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const Login()));
                     },
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
         ),
       ),
     );
