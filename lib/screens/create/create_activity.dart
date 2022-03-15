@@ -49,6 +49,7 @@ class _CreateActivityState extends State<CreateActivity> {
                       labelText: 'Type'
                   ),
                 ),
+                SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {},
                   child: const Text(

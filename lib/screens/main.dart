@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_workout_app/screens/register.dart';
 import 'package:flutter_workout_app/screens/create/create_activity.dart';
+import 'package:flutter_workout_app/screens/workout/createWorkout.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: CreateActivity(),
+      home: CreateWorkout(),
       debugShowCheckedModeBanner: false,
     );
   }
