@@ -8,6 +8,7 @@ class CreateWorkout extends StatefulWidget {
 }
 
 class _CreateWorkoutState extends State<CreateWorkout> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController activity = TextEditingController();
   final TextEditingController duration = TextEditingController();
   @override
@@ -27,15 +28,28 @@ class _CreateWorkoutState extends State<CreateWorkout> {
           padding: const EdgeInsets.all(32),
         child: SingleChildScrollView(
           child: Form(
+            key: _formKey,
             child: Column(
               children: <Widget> [
                 TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter an activity.';
+                    }
+                    return null;
+                  },
                   controller: activity,
                   decoration: const InputDecoration(
                     labelText: 'Activity',
                   ),
                 ),
                 TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a duration.';
+                    }
+                    return null;
+                  },
                   controller: duration,
                   decoration: const InputDecoration(
                     labelText: 'Duration',

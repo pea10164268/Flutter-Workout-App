@@ -14,10 +14,10 @@ class TabsScreen extends StatefulWidget {
 class _TabsScreenState extends State<TabsScreen> {
   final List<Map<String, Widget>> pages = [
     {
-      'page': const HomePage(),
+      'page': const CreateWorkout(),
     },
     {
-      'page': const CreateWorkout(),
+      'page': const HomePage(),
     },
     {
       'page': const Settings(),
@@ -43,23 +43,17 @@ class _TabsScreenState extends State<TabsScreen> {
         currentIndex: selectedPageIndex,
         items: [
           BottomNavigationBarItem(
-            backgroundColor: Theme
-                .of(context)
-                .primaryColor,
+            backgroundColor: Theme.of(context).primaryColor,
             icon: const Icon(Icons.fitness_center),
             label: 'Create Workout',
           ),
           BottomNavigationBarItem(
-            backgroundColor: Theme
-                .of(context)
-                .primaryColor,
+            backgroundColor: Theme.of(context).primaryColor,
             icon: const Icon(Icons.person),
             label: 'Profile',
           ),
           BottomNavigationBarItem(
-            backgroundColor: Theme
-                .of(context)
-                .primaryColor,
+            backgroundColor: Theme.of(context).primaryColor,
             icon: const Icon(Icons.settings),
             label: 'Settings',
           ),

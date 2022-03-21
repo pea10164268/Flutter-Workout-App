@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_workout_app/screens/Tabs.dart';
-import 'package:flutter_workout_app/screens/register.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
@@ -13,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: TabsScreen(),
+      home: Login(),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -27,6 +29,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final _formKey = GlobalKey<FormState>();
   bool _isVisible = true;
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
@@ -47,24 +50,35 @@ class _LoginState extends State<Login> {
         padding: const EdgeInsets.all(32),
         child: SingleChildScrollView(
           child: Form(
+            key: _formKey,
             child: Column(
-              children: <Widget> [
+              children: <Widget>[
                 TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter an email address.';
+                    }
+                    return null;
+                  },
                   controller: email,
                   decoration: const InputDecoration(
                     labelText: "Email",
                   ),
                 ),
                 TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a password.';
+                    }
+                    return null;
+                  },
                   controller: password,
                   obscureText: _isVisible,
                   decoration: InputDecoration(
                       suffixIcon: IconButton(
-                        icon: Icon(
-                            _isVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off
-                        ),
+                        icon: Icon(_isVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off),
                         onPressed: () {
                           setState(() {
                             _isVisible = !_isVisible;
@@ -73,38 +87,39 @@ class _LoginState extends State<Login> {
                       ),
                       labelText: 'Password'),
                 ),
-                Column(
-                    children: <Widget> [
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: const Text(
-                            'Sign In',
-                            style: TextStyle(fontSize: 20)),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                        ),
-                      ),
-                      const Text(
-                        "\n\nDon't have an account?",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        )
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterPage()));
-                        },
-                        child: const Text(
-                          'Register',
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                        ),
-                      ),
-                    ]
-                ),
+                Column(children: <Widget>[
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Validating')),
+                        );
+                      }
+                    },
+                    child:
+                        const Text('Sign In', style: TextStyle(fontSize: 20)),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.black),
+                    ),
+                  ),
+                  const Text("\n\nDon't have an account?",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      )),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: const Text(
+                      'Register',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.black),
+                    ),
+                  ),
+                ]),
               ],
             ),
           ),
@@ -113,4 +128,3 @@ class _LoginState extends State<Login> {
     );
   }
 }
-
